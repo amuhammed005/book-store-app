@@ -33,6 +33,10 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    isDemo: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
