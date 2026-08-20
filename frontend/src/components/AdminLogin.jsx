@@ -48,17 +48,17 @@ const AdminLogin = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
             <label
-              htmlFor="username"
+              htmlFor="email"
               className="block text-gray-700 text-sm font-bold mb-1"
             >
-              Username:{" "}
+              Admin email:{" "}
             </label>
             <input
-              {...register("username", { required: true })}
-              type="text"
-              placeholder="username"
-              name="username"
-              id="username"
+              {...register("email", { required: true })}
+              type="email"
+              placeholder="admin@example.com"
+              name="email"
+              id="email"
               className="w-full py-2 px-3 focus:outline-none focus:shadow-md leading-tight shadow appearance-none border rounded  "
             />
           </div>
