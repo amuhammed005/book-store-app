@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cart/cartSlice";
 import { useFetchBookByIdQuery } from "../../redux/features/books/booksApi";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SingleBook = () => {
   const { id } = useParams();
@@ -15,45 +16,50 @@ const SingleBook = () => {
     dispatch(addToCart(payload));
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error encounted while loading book info</div>;
+  if (isLoading) return <div className="py-20 text-center">Loading book details…</div>;
+  if (isError || !book) {
+    return <div className="py-20 text-center text-red-600">We could not load this book.</div>;
+  }
 
   return (
-    <section className="min-h-screen mt-2">
-      <div className="w-72 md:w-96 p-4 rounded-lg shadow-md">
-        <h1 className="font-bold text-xl mb-4">{book.title}</h1>
-        <div className="mb-4">
+    <section className="min-h-screen py-10 flex justify-center">
+      <article className="w-full max-w-5xl rounded-2xl bg-white p-6 shadow-lg md:grid md:grid-cols-2 md:items-center md:gap-12 md:p-10">
+        <div className="mb-8 flex justify-center md:mb-0">
           <img
             src={`${getImgUrl(book.coverImage)}`}
             alt={book.title}
-            className=" w-56 h-72 rounded border p-2"
+            className="h-[28rem] w-full max-w-sm rounded-xl border bg-gray-50 object-contain p-5 shadow-sm"
           />
         </div>
-        <div>
-          <p className="mb-3">
-            <span className="font-bold">Author:</span> Admin
+        <div className="max-w-xl">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-orange-500">
+            {book.category}
           </p>
-          <p className="mb-2">
-            <span className="font-bold">Published: </span>
-            {new Date(book.createdAt).toLocaleDateString()}{" "}
-            {new Date(book.createdAt).toLocaleTimeString()}
+          <h1 className="mb-5 text-3xl font-bold leading-tight text-gray-900 md:text-4xl">{book.title}</h1>
+          <div className="mb-6 flex items-baseline gap-3">
+            <span className="text-3xl font-bold text-gray-900">${Number(book.newPrice).toFixed(2)}</span>
+            {book.oldPrice && <span className="text-lg text-gray-400 line-through">${Number(book.oldPrice).toFixed(2)}</span>}
+          </div>
+          <p className="mb-4 text-base leading-8 text-gray-600">
+            {book.description}
           </p>
-
-          <p className="mb-3">
-            <span className="font-bold">Category:</span> {book.category}
+          <p className="mb-7 text-sm text-gray-500">
+            Added {new Date(book.createdAt || Date.now()).toLocaleDateString()}
           </p>
-          <p className="mb-3">
-            <span className="font-bold">Description:</span> {book.description}
-          </p>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => handleAddToCart(book)}
+              className="flex items-center rounded-md bg-primary px-6 py-3 text-sm font-medium hover:bg-secondary hover:text-white gap-3"
+            >
+              <FiShoppingCart />
+              Add to Cart
+            </button>
+            <Link to="/cart" className="rounded-md border border-gray-300 px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50">
+              View Cart
+            </Link>
+          </div>
         </div>
-        <button
-          onClick={() => handleAddToCart(book)}
-          className="mb-4 flex items-center bg-primary hover:bg-secondary hover:text-white p-1 px-2 py-2 sm:px-6 rounded-md gap-3"
-        >
-          <FiShoppingCart className="" />
-          <span className="font-normal text-sm">Add to Cart</span>
-        </button>
-      </div>
+      </article>
     </section>
   );
 };

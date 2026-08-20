@@ -12,15 +12,15 @@ const BookCard = ({ book }) => {
   };
 
   return (
-    <div className="rounded-lg transition-transform duration-300 hover:scale-105 hover:shadow-lg">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:h-72 sm:justify-center gap-4">
+    <div className="h-full rounded-xl bg-white p-4 transition-transform duration-300 hover:scale-[1.02] hover:shadow-lg">
+      <div className="flex h-full flex-col gap-4 sm:flex-row sm:items-center">
         {/* Book Image */}
-        <div className="sm:h-72 sm:flex-shrink-0 border rounded-md overflow-hidden">
+        <div className="flex h-64 justify-center overflow-hidden rounded-lg border bg-gray-50 sm:h-72 sm:w-44 sm:flex-shrink-0">
           <Link to={`/books/${book._id}`} className="block">
             <img
               src={`${getImgUrl(book.coverImage)}`}
               alt="bookImg"
-              className="w-full bg-cover pt-2 px-2 cursor-pointer hover:scale-110 transition-transform duration-300"
+              className="h-full w-full object-contain p-3 cursor-pointer hover:scale-105 transition-transform duration-300"
             />
           </Link>
         </div>
@@ -32,7 +32,7 @@ const BookCard = ({ book }) => {
               {book.title}
             </h3>
           </Link>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-600 mb-4 leading-6">
             {book?.description.length > 60
               ? `${book?.description.slice(0, 60)}...`
               : book?.description}
