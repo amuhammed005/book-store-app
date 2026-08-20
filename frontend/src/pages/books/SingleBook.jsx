@@ -3,8 +3,7 @@ import { getImgUrl } from "../../utils/getImgUrl";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cart/cartSlice";
 import { useFetchBookByIdQuery } from "../../redux/features/books/booksApi";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const SingleBook = () => {
   const { id } = useParams();

@@ -12,13 +12,9 @@ const AdminLogin = () => {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log("Data", data);
-
     try {
       const response = await axios.post(
         `${getBaseURL()}/api/auth/admin`,
@@ -29,7 +25,6 @@ const AdminLogin = () => {
           },
         }
       );
-      console.log("response.data: ", response.data);
       const auth = response.data;
       if (auth.token) {
         localStorage.setItem("token", auth.token);
@@ -37,13 +32,12 @@ const AdminLogin = () => {
           localStorage.removeItem("token");
           alert("Token has been expired. Please login in again");
           navigate("/");
-        }, 3600 * 1000);
+        }, 24 * 60 * 60 * 1000);
       }
       showToast("success", "Admin login successful!");
       navigate("/dashboard");
     } catch (error) {
-      console.error(error.message);
-      setErrorMessage("Invalid credentials");
+      setErrorMessage(error.response?.data?.message || "Invalid credentials");
     }
   };
 

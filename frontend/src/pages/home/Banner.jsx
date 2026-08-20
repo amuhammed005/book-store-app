@@ -62,13 +62,14 @@ const Banner = () => {
       { threshold: 0.5 } // Trigger when 20% of the section is visible
     );
 
-    if (bannerRef.current) {
-      observer.observe(bannerRef.current);
+    const bannerElement = bannerRef.current;
+    if (bannerElement) {
+      observer.observe(bannerElement);
     }
 
     return () => {
-      if (bannerRef.current) {
-        observer.unobserve(bannerRef.current);
+      if (bannerElement) {
+        observer.unobserve(bannerElement);
       }
     };
   }, []);

@@ -22,8 +22,6 @@ const Checkout = () => {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
   } = useForm();
   //
   const [createOrder, { isLoading }] = useCreateOrderMutation();
