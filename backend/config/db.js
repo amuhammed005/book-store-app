@@ -1,20 +1,30 @@
 import mongoose from "mongoose";
 
+let databaseAvailable = false;
+
 const connectDB = async () => {
-  // Log the MongoDB URI for debugging
-  console.log("MongoDB URI:", process.env.MONGODB_URI);
+  const uri = process.env.MONGODB_URI;
+
+  if (!uri) {
+    console.warn(
+      "MONGODB_URI is not configured. Starting without MongoDB; the catalogue fallback will be used.",
+    );
+    return false;
+  }
 
   try {
-    // Connect to MongoDB
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
-    // Log the connection details
+    const conn = await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
+    databaseAvailable = true;
     console.log(`MongoDB Connected: ${conn.connection.host}`);
-    //
+    return true;
   } catch (error) {
-    // If there's an error, log it and exit the process
-    console.log(`Error: ${error.message}`);
-    process.exit(1);
+    databaseAvailable = false;
+    console.error(
+      `MongoDB connection failed. Starting with catalogue fallback: ${error.message}`,
+    );
+    return false;
   }
 };
 
+export const isDatabaseAvailable = () => databaseAvailable;
 export default connectDB;

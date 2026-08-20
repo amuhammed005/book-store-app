@@ -198,6 +198,106 @@
       "coverImage": "book-20.png",
       "oldPrice": 24.99,
       "newPrice": 14.99
+    },
+    {
+      "_id": 21,
+      "title": "The Midnight Library",
+      "description": "Between life and death lies a library where every book offers a chance to try another life. A moving, hopeful story about regret and possibility.",
+      "category": "fiction",
+      "trending": true,
+      "coverImage": "book-1.png",
+      "oldPrice": 28.99,
+      "newPrice": 20.99
+    },
+    {
+      "_id": 22,
+      "title": "Atomic Habits",
+      "description": "A practical guide to building better habits through small, consistent changes that compound over time.",
+      "category": "self-help",
+      "trending": true,
+      "coverImage": "book-2.png",
+      "oldPrice": 30.99,
+      "newPrice": 22.99
+    },
+    {
+      "_id": 23,
+      "title": "Educated",
+      "description": "An unforgettable memoir about education, resilience, and finding a voice beyond the limits of a difficult upbringing.",
+      "category": "memoir",
+      "trending": false,
+      "coverImage": "book-3.png",
+      "oldPrice": 27.99,
+      "newPrice": 19.99
+    },
+    {
+      "_id": 24,
+      "title": "Project Hail Mary",
+      "description": "A lone astronaut wakes far from Earth with an impossible mission and a brilliant problem to solve.",
+      "category": "science-fiction",
+      "trending": true,
+      "coverImage": "book-4.png",
+      "oldPrice": 32.99,
+      "newPrice": 24.99
+    },
+    {
+      "_id": 25,
+      "title": "The Silent Patient",
+      "description": "A psychotherapist becomes obsessed with uncovering why a celebrated painter has stopped speaking after a shocking crime.",
+      "category": "thriller",
+      "trending": true,
+      "coverImage": "book-5.png",
+      "oldPrice": 26.99,
+      "newPrice": 18.99
+    },
+    {
+      "_id": 26,
+      "title": "Deep Work",
+      "description": "Learn to focus without distraction and produce your best work in a noisy, always-connected world.",
+      "category": "business",
+      "trending": false,
+      "coverImage": "book-6.png",
+      "oldPrice": 29.99,
+      "newPrice": 21.99
+    },
+    {
+      "_id": 27,
+      "title": "A Court of Thorns and Roses",
+      "description": "A young huntress is drawn into a dangerous faerie world where a curse, a court, and a fierce romance await.",
+      "category": "fantasy",
+      "trending": true,
+      "coverImage": "book-7.png",
+      "oldPrice": 31.99,
+      "newPrice": 23.99
+    },
+    {
+      "_id": 28,
+      "title": "The Thursday Murder Club",
+      "description": "Four clever friends at a retirement village investigate a real murder and discover that age is no barrier to adventure.",
+      "category": "mystery",
+      "trending": false,
+      "coverImage": "book-8.png",
+      "oldPrice": 25.99,
+      "newPrice": 17.99
+    },
+    {
+      "_id": 29,
+      "title": "Sapiens",
+      "description": "A sweeping exploration of how Homo sapiens came to dominate the planet and shape the modern world.",
+      "category": "history",
+      "trending": true,
+      "coverImage": "book-9.png",
+      "oldPrice": 34.99,
+      "newPrice": 26.99
+    },
+    {
+      "_id": 30,
+      "title": "The House in the Cerulean Sea",
+      "description": "A warm-hearted fantasy about found family, unlikely courage, and a caseworker sent to a most unusual orphanage.",
+      "category": "fantasy",
+      "trending": true,
+      "coverImage": "book-10.png",
+      "oldPrice": 28.99,
+      "newPrice": 20.99
     }
   ]
-  
+

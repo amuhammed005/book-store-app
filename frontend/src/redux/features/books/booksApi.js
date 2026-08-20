@@ -20,11 +20,41 @@ const booksApi = createApi({
   tagTypes: ["Books"],
   endpoints: (builder) => ({ 
     fetchAllBooks: builder.query({
-      query: () => "/",
+      async queryFn(_arg, _api, _extraOptions, baseQuery) {
+        const result = await baseQuery("/");
+
+        if (!result.error) {
+          const books = Array.isArray(result.data) ? result.data : result.data.books;
+          return { data: { books, source: result.data.source || "database" } };
+        }
+
+        try {
+          const response = await fetch("/books.json");
+          if (!response.ok) throw new Error("Fallback catalogue could not be loaded");
+          const books = await response.json();
+          return { data: { books, source: "fallback" } };
+        } catch (error) {
+          return { error: { status: "FETCH_ERROR", error: error.message } };
+        }
+      },
       providesTags: ["Books"],
     }),
     fetchBookById: builder.query({
-      query: (id) => `/${id}`,
+      async queryFn(id, _api, _extraOptions, baseQuery) {
+        const result = await baseQuery(`/${id}`);
+        if (!result.error) return { data: result.data };
+
+        try {
+          const response = await fetch("/books.json");
+          const books = await response.json();
+          const book = books.find((item) => String(item._id) === String(id));
+          return book
+            ? { data: book }
+            : { error: { status: 404, error: "Book not found" } };
+        } catch (error) {
+          return { error: { status: "FETCH_ERROR", error: error.message } };
+        }
+      },
       providesTags: (result, error, id) => [{ type: "Books", id }],
     }),
     addBook: builder.mutation({

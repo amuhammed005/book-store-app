@@ -20,7 +20,8 @@ const Recommended = () => {
   //     .then((data) => setBooks(data));
   // }, []);
 
-  const { data: books = [] } = useFetchAllBooksQuery();
+  const { data, isLoading, isError } = useFetchAllBooksQuery();
+  const books = data?.books ?? [];
 
   return (
     <div className="py-16">
@@ -50,6 +51,8 @@ const Recommended = () => {
         modules={[Pagination, Navigation]}
         className="mySwiper"
       >
+        {isLoading && <p>Loading recommendations…</p>}
+        {isError && <p className="text-red-600">Recommendations are temporarily unavailable.</p>}
         {books?.length > 0 &&
           books.slice(8, 16).map((book, index) => (
             <SwiperSlide key={index}>

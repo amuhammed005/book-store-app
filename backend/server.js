@@ -39,6 +39,10 @@ app.get("/", (req, res) => {
   res.send("Book Store Backend running");
 });
 
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
