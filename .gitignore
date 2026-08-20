@@ -17,3 +17,9 @@ npm-debug.log*
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+# Build output
+dist/
+
+# Editor settings
+.vscode/
