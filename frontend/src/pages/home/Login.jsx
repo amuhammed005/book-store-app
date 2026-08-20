@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +8,7 @@ import { showToast } from "../../utils/toastAlert";
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState(false);
 
-  const { loginUser, signInWithGoogle } = useAuth();
+  const { loginUser } = useAuth();
 
   const navigate = useNavigate();
 
@@ -19,25 +18,12 @@ const Login = () => {
   } = useForm();
   //
   const onSubmit = async (data) => {
-    console.log(data);
-
     try {
       await loginUser(data.email, data.password);
       showToast("success", "Login successful!");
       navigate("/");
     } catch (error) {
-      console.error(error.message);
-      setErrorMessage("Invalid credentials");
-    }
-  };
-  const handleGoogleSignIn = async () => {
-    try {
-      await signInWithGoogle();
-      showToast("success", "Login successful!");
-      navigate("/");
-    } catch (error) {
-      console.error(error.message);
-      showToast("error", "Login  with google failed");
+      setErrorMessage(error.message);
     }
   };
   return (
@@ -95,16 +81,6 @@ const Login = () => {
             register
           </Link>
         </p>
-        {/* Sign in with google */}
-        <div className="mt-4">
-          <button
-            onClick={handleGoogleSignIn}
-            className="w-full flex flex-wrap gap-1 items-center font-bold justify-center py-2 px-4 rounded bg-secondary hover:bg-blue-800 text-white focus:outline-none"
-          >
-            <FaGoogle className="mr-2" />
-            Sign in with google
-          </button>
-        </div>
         <p className="mt-5 text-center text-gray-500 text-xsm">
           Adam&apos;s Book Store. All rights reserved.
         </p>

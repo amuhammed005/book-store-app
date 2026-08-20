@@ -1,15 +1,5 @@
-import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-} from "firebase/auth";
 import { createContext, useContext, useEffect, useState } from "react";
-import { auth } from "../firebase/firebase.config";
-
-console.log("Firebase Auth:", auth);
+import getBaseURL from "../src/utils/baseURL";
 
 const AuthContext = createContext();
 
@@ -17,46 +7,53 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-const googleProvider = new GoogleAuthProvider();
+const requestAuth = async (path, payload) => {
+  const response = await fetch(`${getBaseURL()}/api/auth${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Authentication failed");
+  return data;
+};
 
 //authProvider
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Register a user
-  const registerUser = async (email, password) => {
-    return await createUserWithEmailAndPassword(auth, email, password);
+  const saveSession = (data) => {
+    localStorage.setItem("customerToken", data.token);
+    localStorage.setItem("customer", JSON.stringify(data.user));
+    setCurrentUser(data.user);
   };
-  // Login User
-  const loginUser = async (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
-  };
-  //Login with Google
-  const signInWithGoogle = async () => {
-    return await signInWithPopup(auth, googleProvider);
-  };
-  // Sign Out
-  const logout = () => {
-    return signOut(auth);
-  };
-  //Manage user login
-  useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      setLoading(false);
 
-      if (user) {
-        const { email, displayName, photoURL } = user;
-        const userData = {
-          email,
-          username: displayName,
-          photo: photoURL,
-        };
-        console.log(userData);
-      }
-    });
-    return () => unSubscribe();
+  const registerUser = async (username, email, password) => {
+    const data = await requestAuth("/register", { username, email, password });
+    saveSession(data);
+    return data;
+  };
+  const loginUser = async (email, password) => {
+    const data = await requestAuth("/login", { email, password });
+    saveSession(data);
+    return data;
+  };
+  const logout = () => {
+    localStorage.removeItem("customerToken");
+    localStorage.removeItem("customer");
+    setCurrentUser(null);
+  };
+
+  useEffect(() => {
+    try {
+      const user = JSON.parse(localStorage.getItem("customer"));
+      setCurrentUser(user);
+    } catch {
+      localStorage.removeItem("customer");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   // Value
@@ -65,7 +62,6 @@ export const AuthProvider = ({ children }) => {
     loading,
     registerUser,
     loginUser,
-    signInWithGoogle,
     logout,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

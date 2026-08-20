@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { showToast } from "../../utils/toastAlert";
 const SignUp = () => {
   const [errorMessage, setErrorMessage] = useState("");
-  const { registerUser, signInWithGoogle } = useAuth();
+  const { registerUser } = useAuth();
   //
   const navigate = useNavigate();
   //
@@ -17,42 +16,12 @@ const SignUp = () => {
   } = useForm();
   // On submit Register User
   const onSubmit = async (data) => {
-    console.log("Data:", data);
     try {
-      await registerUser(data.email, data.password);
+      await registerUser(data.username, data.email, data.password);
       showToast("success", "Sign up successful!");
-      navigate("/login");
+      navigate("/");
     } catch (error) {
-      console.error(error.message);
-      setErrorMessage("Invalid credentials");
-
-      // Handle specific Firebase error codes
-      if (error.code === "auth/email-already-in-use") {
-        setErrorMessage(
-          "This email is already in use. Please use a different email or login."
-        );
-      } else if (error.code === "auth/weak-password") {
-        setErrorMessage(
-          "The password is too weak. Please choose a stronger password."
-        );
-      } else if (error.code === "auth/invalid-email") {
-        setErrorMessage("Invalid email address. Please check and try again.");
-      } else {
-        setErrorMessage(
-          "An unexpected error occurred. Please try again later."
-        );
-      }
-    }
-  };
-
-  const handleGoogleSignUp = async () => {
-    try {
-      await signInWithGoogle();
-      showToast("success", "Sign up successful!");
-      navigate("/login");
-    } catch (error) {
-      console.error(error.message);
-      showToast("error", "Login  with google failed");
+      setErrorMessage(error.message);
     }
   };
 
@@ -61,22 +30,22 @@ const SignUp = () => {
       <div className="w-full max-w-sm mx-auto bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <h2 className="text-xl font-semibold mb-4">Register</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* <div className="mb-3">
+          <div className="mb-3">
             <label
-              htmlFor="name"
+              htmlFor="username"
               className="block text-gray-700 text-sm font-bold mb-1"
             >
               Full name:{" "}
             </label>
             <input
-              {...register("name", { required: true })}
+              {...register("username")}
               type="text"
-              placeholder="Full name"
-              name="name"
-              id="name"
+              placeholder="Your name (optional)"
+              name="username"
+              id="username"
               className="w-full py-2 px-3 focus:outline-none focus:shadow-md leading-tight shadow appearance-none border rounded  "
             />
-          </div> */}
+          </div>
           <div className="mb-3">
             <label
               htmlFor="email"
@@ -101,7 +70,7 @@ const SignUp = () => {
               Password:
             </label>
             <input
-              {...register("password", { required: true })}
+              {...register("password", { required: true, minLength: 8 })}
               type="password"
               placeholder="Password"
               name="password"
@@ -143,16 +112,6 @@ const SignUp = () => {
             login
           </Link>
         </p>
-        {/* Sign in with google */}
-        <div className="mt-3">
-          <button
-            onClick={handleGoogleSignUp}
-            className="w-full flex flex-wrap gap-1 items-center font-bold justify-center py-2 px-4 rounded bg-secondary hover:bg-blue-800 text-white focus:outline-none"
-          >
-            <FaGoogle className="mr-2" />
-            Sign up with google
-          </button>
-        </div>
         <p className="mt-3 text-center text-gray-500 text-xsm">
           Adam&apos;s Book Store. All rights reserved.
         </p>
