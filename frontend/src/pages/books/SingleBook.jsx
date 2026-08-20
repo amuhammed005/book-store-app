@@ -3,10 +3,12 @@ import { getImgUrl } from "../../utils/getImgUrl";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cart/cartSlice";
 import { useFetchBookByIdQuery } from "../../redux/features/books/booksApi";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 
 const SingleBook = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data: book, isError, isLoading } = useFetchBookByIdQuery(id);
 
   const dispatch = useDispatch();
@@ -21,16 +23,25 @@ const SingleBook = () => {
   }
 
   return (
-    <section className="min-h-screen py-10 flex justify-center">
-      <article className="w-full max-w-5xl rounded-2xl bg-white p-6 shadow-lg md:grid md:grid-cols-2 md:items-center md:gap-12 md:p-10">
-        <div className="mb-8 flex justify-center md:mb-0">
+    <section className="min-h-screen py-10">
+      <div className="mx-auto mb-5 max-w-3xl">
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
+        >
+          <FiArrowLeft /> Back to books
+        </button>
+      </div>
+      <article className="mx-auto w-full max-w-3xl rounded-2xl bg-white p-6 shadow-lg md:p-10">
+        <div className="mb-9 flex justify-center">
           <img
             src={`${getImgUrl(book.coverImage)}`}
             alt={book.title}
-            className="h-[28rem] w-full max-w-sm rounded-xl border bg-gray-50 object-contain p-5 shadow-sm"
+            className="h-[32rem] w-full max-w-xl rounded-xl border bg-gray-50 object-contain p-6 shadow-sm"
           />
         </div>
-        <div className="max-w-xl">
+        <div className="mx-auto max-w-2xl">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-orange-500">
             {book.category}
           </p>

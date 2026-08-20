@@ -1,29 +1,29 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import BookCard from "../books/BookCard";
-// Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-// import required modules
-import { Pagination, Navigation } from "swiper/modules";
+import BookCardSkeleton from "../books/BookCardSkeleton";
 import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 
 const TopSellers = () => {
-  // const [books, setBooks] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("Choose a genre");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchParams] = useSearchParams();
 
   const { data, isLoading, isError } = useFetchAllBooksQuery();
   const books = data?.books ?? [];
   const categories = ["all", ...new Set(books.map((book) => book.category))];
 
+  const searchTerm = searchParams.get("search")?.trim().toLowerCase() || "";
   const filteredBooks =
     selectedCategory === "all"
       ? books
       : books.filter(
           (book) => book.category === selectedCategory
         );
+  const visibleBooks = searchTerm
+    ? filteredBooks.filter((book) =>
+        `${book.title} ${book.description} ${book.category}`.toLowerCase().includes(searchTerm),
+      )
+    : filteredBooks.filter((book) => book.trending).slice(0, 9);
 
   // useEffect(() => {
   //   fetch("books.json")
@@ -32,8 +32,12 @@ const TopSellers = () => {
   // }, []);
 
   return (
-  <div className="py-10">
-      <h1 className="text-3xl font-semibold mb-8">Top Sellers</h1>
+    <section id="top-sellers" className="py-12">
+      <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">Reader favourites</p>
+          <h1 className="text-3xl font-semibold">{searchTerm ? `Results for “${searchTerm}”` : "Top Sellers"}</h1>
+        </div>
       <div className="flex items-center mb-6">
         <select
           name="category"
@@ -48,44 +52,16 @@ const TopSellers = () => {
           ))}
         </select>
       </div>
-      <Swiper
-        slidesPerView={1}
-        spaceBetween={30}
-        navigation={true}
-        breakpoints={{
-          640: {
-            slidesPerView: 1,
-            spaceBetween: 20,
-          },
-          768: {
-            slidesPerView: 1,
-            spaceBetween: 30,
-          },
-          1024: {
-            slidesPerView: 2,
-            spaceBetween: 30,
-          },
-          1200: {
-            slidesPerView: 3,
-            spaceBetween: 30,
-          },
-        }}
-        modules={[Pagination, Navigation]}
-        className="mySwiper"
-      >
-        {isLoading && <p>Loading books…</p>}
-        {isError && <p className="text-red-600">We could not load the catalogue.</p>}
-        {!isLoading && !isError && filteredBooks.length === 0 && (
-          <p>No books match this genre yet.</p>
-        )}
-        {filteredBooks?.length > 0 &&
-          filteredBooks.map((book, index) => (
-            <SwiperSlide key={index}>
-              <BookCard book={book} />
-            </SwiperSlide>
-          ))}
-      </Swiper>
-    </div>
+      </div>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {isLoading && Array.from({ length: 9 }, (_, index) => <BookCardSkeleton key={index} />)}
+        {!isLoading && visibleBooks.map((book) => <BookCard key={book._id} book={book} />)}
+      </div>
+      {isError && <p className="mt-6 text-red-600">We could not load the catalogue. Please try again shortly.</p>}
+      {!isLoading && !isError && visibleBooks.length === 0 && (
+        <p className="mt-6 text-gray-600">No books match this genre or search.</p>
+      )}
+    </section>
   );
 };
 

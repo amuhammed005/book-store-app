@@ -1,14 +1,7 @@
 // import { useEffect, useState } from "react";
 
-// Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
-// import required modules
-import { Pagination, Navigation } from "swiper/modules";
 import BookCard from "../books/BookCard";
+import BookCardSkeleton from "../books/BookCardSkeleton";
 import { useFetchAllBooksQuery } from "../../redux/features/books/booksApi";
 
 const Recommended = () => {
@@ -24,43 +17,15 @@ const Recommended = () => {
   const books = data?.books ?? [];
 
   return (
-    <div className="py-16">
-      <h1 className="text-3xl font-semibold mb-8">Recommended for you</h1>
-      <Swiper
-        slidesPerView={1}
-        spaceBetween={30}
-        navigation={true}
-        breakpoints={{
-          640: {
-            slidesPerView: 1,
-            spaceBetween: 20,
-          },
-          768: {
-            slidesPerView: 1,
-            spaceBetween: 30,
-          },
-          1024: {
-            slidesPerView: 2,
-            spaceBetween: 30,
-          },
-          1200: {
-            slidesPerView: 3,
-            spaceBetween: 30,
-          },
-        }}
-        modules={[Pagination, Navigation]}
-        className="mySwiper"
-      >
-        {isLoading && <p>Loading recommendations…</p>}
-        {isError && <p className="text-red-600">Recommendations are temporarily unavailable.</p>}
-        {books?.length > 0 &&
-          books.slice(8, 16).map((book, index) => (
-            <SwiperSlide key={index}>
-              <BookCard book={book} />
-            </SwiperSlide>
-          ))}
-      </Swiper>
-    </div>
+    <section className="py-14">
+      <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-orange-500">Keep exploring</p>
+      <h1 className="mb-8 text-3xl font-semibold">Recommended for you</h1>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {isLoading && Array.from({ length: 6 }, (_, index) => <BookCardSkeleton key={index} />)}
+        {!isLoading && books.slice(9, 18).map((book) => <BookCard key={book._id} book={book} />)}
+      </div>
+      {isError && <p className="mt-6 text-red-600">Recommendations are temporarily unavailable.</p>}
+    </section>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HiBars3CenterLeft } from "react-icons/hi2";
 import { IoSearchOutline } from "react-icons/io5";
 import { HiOutlineUser, HiOutlineHeart } from "react-icons/hi";
@@ -19,11 +19,18 @@ const navigation = [
 const Navbar = () => {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const { currentUser, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
+  };
+  const handleSearch = (event) => {
+    event.preventDefault();
+    const query = search.trim();
+    navigate(query ? `/?search=${encodeURIComponent(query)}#top-sellers` : "/#top-sellers");
   };
 
   return (
@@ -34,14 +41,16 @@ const Navbar = () => {
           <Link to="/">
             <HiBars3CenterLeft className="text-2xl" />
           </Link>
-          <div className="relative w-40 sm:w-72">
+          <form className="relative w-40 sm:w-72" onSubmit={handleSearch}>
             <IoSearchOutline className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" />
             <input
               type="text"
               placeholder="Search here"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
               className="bg-[#EAEAEA] w-full py-2 px-10 rounded-full focus:outline-none focus:w-56 md:focus:w-96 transition-all duration-500 ease-in-out"
             />
-          </div>
+          </form>
         </div>
 
         {/* Right Side */}
